@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/ABackground.png</file>
+        <file>image/ABall.gif</file>
+        <file>image/ABall.png</file>
+        <file>image/AGun.png</file>
+        <file>image/AGun_shoot.gif</file>
+        <file>image/background_gameplay.png</file>
+        <file>image/bullet.png</file>
+        <file>image/Heart_empty.png</file>
+        <file>image/Heart_full.png</file>
+        <file>image/hero_run_left.gif</file>
+        <file>image/hero_run_right.gif</file>
+        <file>image/hero_stand_left.gif</file>
+        <file>image/hero_stand_right.gif</file>
+        <file>image/ic_cursor.png</file>
+        <file>image/ic_energyunit.png</file>
+        <file>image/T_TitleLeaves.png</file>
+    </qresource>
+</RCC>
