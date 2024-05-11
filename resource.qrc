@@ -25,5 +25,14 @@
         <file>image/enemy/en_float.png</file>
         <file>image/enemy/en_float_elite.png</file>
         <file>image/enemy/en_bot.gif</file>
+        <file>image/icons/heart_empty.png</file>
+        <file>image/icons/heart_full.png</file>
+        <file>image/icons/ic_data_collector.png</file>
+        <file>image/icons/ic_datafile.png</file>
+        <file>image/icons/ic_hp_increment.png</file>
+        <file>image/icons/ic_logo.png</file>
+        <file>image/icons/ic_muzzle_choke.png</file>
+        <file>image/icons/ic_respawn_udisk.png</file>
+        <file>image/icons/Myicon.ico</file>
     </qresource>
 </RCC>

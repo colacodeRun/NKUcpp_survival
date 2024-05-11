@@ -13,7 +13,6 @@ public:
     explicit enemy_1(QPointF point_, qreal speed, QGraphicsScene *scene_,QObject *parent = nullptr);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    // void enemy_1_move(hero *player);
 private:
     QPixmap pixmap;
 signals:

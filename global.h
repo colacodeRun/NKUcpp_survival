@@ -17,4 +17,6 @@
 #define bullet_height 4
 #define enemy_1_width 16
 #define enemy_1_height 14
+#define gun_width 32
+#define gun_height 32
 #endif // GLOBAL_H

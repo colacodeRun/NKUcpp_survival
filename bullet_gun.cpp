@@ -5,7 +5,7 @@ bullet_gun::bullet_gun(QPointF pos_, qreal angle_, qreal damage_, QGraphicsScene
     :bullet_base(pos_, angle_, damage_, scene_, parent)
 {
     bullet_pixmap.load("://image/weapon/gun_bullet.png");
-
+    //bullet_pixmap.load("://image/weapon/wp_dmr_bullet.png");
 }
 
 QRectF bullet_gun::boundingRect() const

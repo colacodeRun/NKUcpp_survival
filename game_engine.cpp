@@ -24,37 +24,52 @@ game_engine::game_engine(QWidget *parent)
     : QGraphicsView{parent}
 {
     this->setFixedSize(game_widget_width,game_widget_height);//设置窗口大小
+    setStyleSheet("background-color: rgb(34,34,34);");
+    QFont pixelFont;
+    pixelFont.setFamily("Minecraft AE");
+    QLabel *label = new QLabel("You Lose", this); // 创建一个QLabel对象，并将其添加到窗口中
+    label->setStyleSheet("color: white; font-size: 100px;");
+    label->setFont(pixelFont);
+    label ->move(200,300);
+    // //初始化视图
+    // map_scene =new background_scene(this);
+    // this->setScene(map_scene);
+    // gun = new weapon(map_scene,map_scene->hero_item->scenePos());
+    // // gun->move_gun();
+    // // this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // // this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // this->centerOn(map_scene->hero_item);
+    // //障碍物初始化
+    // QRectF rects(0,0,150,300);
+    // for(int i=0;i<5;++i){
+    //     obstacles.push_back(new obstacle(map_scene,rects,poses[i]));
+    // }
 
-    //初始化视图
-    map_scene =new background_scene(this);
-    this->setScene(map_scene);
-    // this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    this->centerOn(map_scene->hero_item);
-    //障碍物初始化
-    QRectF rects(0,0,150,300);
-    for(int i=0;i<5;++i){
-        obstacles.push_back(new obstacle(map_scene,rects,poses[i]));
-    }
+    // //攻击范围
+    // attack_extent = 300;
+    // //生命
+    // health = 4;
+    // heart_list.push_back(new heart_lable(this));
+    // for(int i= 1;i<=3;++i){
+    //     heart_list.push_back(new heart_lable(this));
+    //     heart_list[i]->move(heart_list[i-1]->pos().x()-44,44);
+    // }
+    // //敌人数目计数器
+    // enemy_num = 0;
+    // //初始化计时器
+    // timer =new QTimer(this);
+    // timer->setInterval(200);
+    // timer->start();
+    // bullet_timer =new QTimer(this);
+    // bullet_timer->start(400);
+    // enemy_timer =new QTimer(this);
+    // enemy_timer-> start(1000);
 
-    attack_extent = 300;
-    enemy_num = 0;
-    //enemy_list.push_back(new enemy_1(map_scene->hero_item->scenePos(),10,map_scene));
-    //初始化计时器
-    timer =new QTimer(this);
-    timer->setInterval(200);
-    timer->start();
-    bullet_timer =new QTimer(this);
-    bullet_timer->start(500);
-    enemy_timer =new QTimer(this);
-    enemy_timer-> start(1000);
-
-    connect(enemy_timer,&QTimer::timeout,this,&game_engine::enemy_generate);
-    connect(bullet_timer,&QTimer::timeout,this,&game_engine::bullet_generate);
-    connect(timer,&QTimer::timeout,this,&game_engine::view_update);
-    //设置聚焦
-    this->setFocus();
-
+    // connect(enemy_timer,&QTimer::timeout,this,&game_engine::enemy_generate);
+    // connect(bullet_timer,&QTimer::timeout,this,&game_engine::gun_fire);
+    // connect(timer,&QTimer::timeout,this,&game_engine::view_update);
+    // //设置聚焦
+    // this->setFocus();
 
 }
 
@@ -63,6 +78,7 @@ void game_engine::view_update()
 {
     hero_update();
     map_scene_update();
+    gun->setPos(map_scene->hero_item->scenePos());
     enemy_death();
     enemy_update();
 }
@@ -115,6 +131,7 @@ void game_engine::hero_update()
             }
         }
     }
+    //边界检测
     if(map_scene->hero_item->x()-hero_width/2+dx>=map_left &&
         map_scene->hero_item->y()-hero_height/2+dy>=map_top &&
         map_scene->hero_item->x()+hero_width/2+dx<=map_right &&
@@ -143,39 +160,32 @@ void game_engine::map_scene_update()
     this->centerOn(map_scene->hero_item);
 }
 
-void game_engine::bullet_generate()
-{
-    if(enemy_num>0)
-    {
-    std::sort(enemy_list.begin(),enemy_list.end(),[](enemy_base *a,enemy_base *b){
-        return a->distance_hero<=b->distance_hero;
-    });
-    qreal angle = gain_angle(map_scene->hero_item->scenePos(),enemy_list[0]->scenePos());
-    if(enemy_list[0]-> distance_hero<=attack_extent)
-        bullet_gun *bullet=new bullet_gun(map_scene->hero_item->scenePos(),angle,1,map_scene);
-    }
-}
-
+//获取坐标间角度（到正x轴)
 qreal game_engine::gain_angle(QPointF a, QPointF b)
 {
-    qreal x1=a.x(),
-        y1=a.y(),
-        x2=b.x(),
-        y2=b.y();
-    qreal angle;
-    if(y2!=y1){
-        angle = qAtan((x2-x1)/(y2-y1));
-        if(y2<y1){
-            angle+=M_PI;
-        }
-    }
-    else{
-        if(x2>=x1)angle=M_PI/2;
-        if(x2<x1)angle=M_PI*1.5;
-    }
-    return angle;
+    qreal dx = b.x()-a.x(),
+        dy = b.y()-a.y();
+    return qAtan2(dy,dx);
 }
 
+//开火
+void game_engine::gun_fire()
+{
+        if(enemy_num>0)
+        {
+        std::sort(enemy_list.begin(),enemy_list.end(),[](enemy_base *a,enemy_base *b){
+            return a->distance_hero<=b->distance_hero;
+        });
+        qreal angle = gain_angle(map_scene->hero_item->scenePos(),enemy_list[0]->scenePos());
+        if(enemy_list[0]-> distance_hero<=attack_extent){
+            bullet_gun *bullet=new bullet_gun(map_scene->hero_item->scenePos(),angle,1,map_scene);
+            gun->gain_angle(enemy_list[0]->scenePos());
+            gun->move_gun();
+        }
+        }
+}
+
+//敌人死亡判断
 void game_engine::enemy_death()
 {
     QMutableListIterator<enemy_base*> it(enemy_list);
@@ -224,6 +234,7 @@ void game_engine::enemy_update()
         }
 }
 
+//敌人生成器
 void game_engine::enemy_generate()
 {
     int i = QRandomGenerator::global()->bounded(8);
@@ -231,9 +242,9 @@ void game_engine::enemy_generate()
         enemy_list.push_back(new enemy_1(enemy_generate_poses[i],15,map_scene));
         ++enemy_num;
     }
-
 }
 
+//回溯法判断敌人碰撞障碍物
 bool game_engine::enemy_hit_obstacle_check(enemy_base *x, obstacle *y, qreal angle)
 {
         x->enemy_move(angle);
@@ -254,6 +265,7 @@ qreal game_engine::gain_points_distance(QPointF n, QPointF m)
     return sqrt(pow(n.x()-m.x(),2)+pow(n.y()-m.y(),2));
 }
 
+//获取键盘按下和释放，实现长按移动
 void game_engine::keyPressEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_W || event->key()==Qt::Key_A || event->key()==Qt::Key_S || event->key()==Qt::Key_D)
@@ -270,52 +282,3 @@ void game_engine::keyReleaseEvent(QKeyEvent *event)
         keymap[event->key()]=false;
     }
 }
-
-//敌人自动寻路
-// void game_engine::enemy_1_update()
-// {
-//     for (QList<enemy_1*>::iterator it1 = enemy_1_list.begin(); it1 != enemy_1_list.end(); ++it1) {
-//         bool flag=true;
-//         qreal angle=(*it1)->move_angle(map_scene->hero_item->scenePos());
-//         for(QList<obstacle*>::iterator it2=obstacles.begin();it2 != obstacles.end();++it2){
-//             if(enemy_hit_obstacle_check(*it1,*it2,angle)){
-//                 flag=false;
-//                 QList<QPair<qreal,qreal>>list;
-//                 //dfs回溯寻找方向
-//                 for(int i=0;i<4;++i){
-//                     (*it1)->enemy_move(M_PI/2*i);
-//                     qreal distance = gain_points_distance((*it1)->scenePos(),map_scene->hero_item->scenePos());
-//                     if(!(*it1)->collidesWithItem(*it2)){
-//                         list.push_back({M_PI/2*i,distance});
-//                     }
-//                     (*it1)->enemy_move(M_PI/2*i-M_PI);
-//                 }
-//                 //取distance最短的路径
-//                 std::sort(list.begin(),list.end(),[](QPair<qreal,qreal> &a,QPair<qreal,qreal> &b){
-//                     return a.second<=b.second;
-//                 });
-//                 (*it1)->enemy_move(list[0].first);
-//                 (*it1)->distance_hero = gain_points_distance((*it1)->scenePos(),map_scene->hero_item->scenePos());
-//                 break;
-//             }
-//         }
-//         if(flag){
-//             (*it1)->distance_hero = gain_points_distance((*it1)->scenePos(),map_scene->hero_item->scenePos());
-//             (*it1)->enemy_move(angle);
-//         }
-//     }
-// }
-
-//回溯法检测碰撞
-// bool game_engine::enemy_hit_obstacle_check(enemy_1 *x, obstacle *y,qreal angle)
-// {
-//     x->enemy_move(angle);
-//     if(x->collidesWithItem(y)){
-//         x->enemy_move(angle-M_PI);
-//         return true;
-//     }
-//     else{
-//         x->enemy_move(angle-M_PI);
-//         return false;
-//     }
-// }

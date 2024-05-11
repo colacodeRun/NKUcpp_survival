@@ -22,6 +22,7 @@ bool enemy_base::enemy_die()
 
 void enemy_base::enemy_move(qreal angle)
 {
+    angle =M_PI/2-angle;
     qreal x1=scenePos().x(),
         y1=scenePos().y();
     qreal dx = speed*qSin(angle),
@@ -31,22 +32,9 @@ void enemy_base::enemy_move(qreal angle)
 
 qreal enemy_base::move_angle(QPointF pos)
 {
-    qreal x1=scenePos().x(),
-        y1=scenePos().y(),
-        x2=pos.x(),
-        y2=pos.y();
-    qreal angle;
-    if(y2!=y1){
-        angle = qAtan((x2-x1)/(y2-y1));
-        if(y2<y1){
-            angle+=M_PI;
-        }
-    }
-    else{
-        if(x2>=x1)angle=M_PI/2;
-        if(x2<x1)angle=M_PI*1.5;
-    }
-    return angle;
+    qreal dx = pos.x() - scenePos().x(),
+        dy = pos.y() - scenePos().y();
+    return qAtan2(dy,dx);
 }
 
 

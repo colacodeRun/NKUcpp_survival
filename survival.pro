@@ -15,10 +15,12 @@ SOURCES += \
     enemy_1.cpp \
     enemy_base.cpp \
     game_engine.cpp \
+    heart_lable.cpp \
     hero.cpp \
     main.cpp \
     mainwindow.cpp \
-    obstacle.cpp
+    obstacle.cpp \
+    weapon.cpp
 
 HEADERS += \
     background_scene.h \
@@ -28,9 +30,11 @@ HEADERS += \
     enemy_base.h \
     game_engine.h \
     global.h \
+    heart_lable.h \
     hero.h \
     mainwindow.h \
-    obstacle.h
+    obstacle.h \
+    weapon.h
 
 FORMS += \
     mainwindow.ui

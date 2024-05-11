@@ -5,8 +5,8 @@ bullet_base::bullet_base(QPointF pos_, qreal angle_, qreal damage_, QGraphicsSce
 {
     scene_->addItem(this);
     setPos(bullet_point.x(),bullet_point.y());
-    // qreal angle_degrees = qRadiansToDegrees(angle_);
-    // setRotation(angle_degrees);
+    qreal angle_degrees = qRadiansToDegrees(angle_);
+    setRotation(-angle_degrees);
     setScale(4);
     bullet_timer =new QTimer(this);
     bullet_timer->start(15);
@@ -31,9 +31,10 @@ void bullet_base::hit_enemy_check()
 
 void bullet_base::bullet_move()
 {
+    qreal angle =M_PI/2-bullet_angle;
     bullet_speed=bullet_gun_speed;
     qreal distance=bullet_speed;
-    qreal dx=distance*qSin(bullet_angle);
-    qreal dy=distance*qCos(bullet_angle);
+    qreal dx=distance*qSin(angle);
+    qreal dy=distance*qCos(angle);
     setPos(x()+dx,y()+dy);
 }
