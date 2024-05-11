@@ -16,10 +16,10 @@ hero::hero(QObject *parent)
 
 QRectF hero::boundingRect() const
 {
-    return QRectF(0, 0, hero_width, hero_height);
+    return QRectF(-hero_width/2, -hero_height/2, hero_width, hero_height);
 }
 
 void hero::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0, 0, movie->currentPixmap().scaled(hero_width, hero_height, Qt::KeepAspectRatio));
+    painter->drawPixmap(-hero_width/2, -hero_height/2, movie->currentPixmap().scaled(hero_width, hero_height, Qt::KeepAspectRatio));
 }

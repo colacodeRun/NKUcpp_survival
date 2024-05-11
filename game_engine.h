@@ -3,14 +3,16 @@
 
 #include"background_scene.h"
 #include"global.h"
-
-
+#include"bullet_gun.h"
+#include "enemy_1.h"
+#include "obstacle.h"
 #include <QWidget>
 #include<QGraphicsView>
 #include<QTimer>
 #include<QMap>
 #include<QKeyEvent>
-
+#include<cmath>
+#include <QRandomGenerator>
 class game_engine : public QGraphicsView
 {
     friend class background_scene;
@@ -20,16 +22,29 @@ public:
     explicit game_engine(QWidget *parent = nullptr);
     void view_update();
     void hero_update();
+
     void map_scene_update();
+    void bullet_generate();
+    qreal gain_angle(QPointF a,QPointF b);
+
+    void enemy_death();
+    void enemy_update();
+    void enemy_generate();
+    bool enemy_hit_obstacle_check(enemy_base *x,obstacle *y,qreal angle);
+    qreal gain_points_distance(QPointF n,QPointF m);
 protected:
     void wheelEvent(QWheelEvent *event){}
     void keyPressEvent(QKeyEvent *eyent);
     void keyReleaseEvent(QKeyEvent *event);
 private:
-    background_scene *map_scene;
     QTimer *timer;
+    QTimer *bullet_timer;
+    QTimer *enemy_timer;
+    qreal attack_extent;
+    QList<obstacle*> obstacles ;
+    background_scene *map_scene;
     int lastkey=Qt::Key_D;
-    int dx=0,dy=0;
+    double dx=0,dy=0;
     QMap<int,bool> keymap=
     {
         {Qt::Key_W,false},
@@ -37,6 +52,8 @@ private:
         {Qt::Key_S,false},
         {Qt::Key_D,false}
     };
+    QList<enemy_base*>enemy_list;
+    qreal enemy_num;
 signals:
 };
 

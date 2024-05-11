@@ -7,10 +7,14 @@
 #define game_widget_height 800
 #define map_width 4800
 #define map_height 2700
-#define mobile_step 15
+#define mobile_step 20
 #define map_top 638
 #define map_underneath 2070
 #define map_left 648
 #define map_right 4150
-
+#define bullet_gun_speed 15
+#define bullet_width 4
+#define bullet_height 4
+#define enemy_1_width 16
+#define enemy_1_height 14
 #endif // GLOBAL_H

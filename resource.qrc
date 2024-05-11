@@ -16,5 +16,14 @@
         <file>image/ic_cursor.png</file>
         <file>image/ic_energyunit.png</file>
         <file>image/T_TitleLeaves.png</file>
+        <file>image/weapon/gun_bullet.png</file>
+        <file>image/weapon/wp_dmr_bullet.png</file>
+        <file>image/weapon/wp_smg_bullet.png</file>
+        <file>image/enemy/en_explosive.png</file>
+        <file>image/enemy/en_bot_elite.gif</file>
+        <file>image/enemy/en_bullet.png</file>
+        <file>image/enemy/en_float.png</file>
+        <file>image/enemy/en_float_elite.png</file>
+        <file>image/enemy/en_bot.gif</file>
     </qresource>
 </RCC>

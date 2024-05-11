@@ -10,17 +10,27 @@ CONFIG += c++17
 
 SOURCES += \
     background_scene.cpp \
+    bullet_base.cpp \
+    bullet_gun.cpp \
+    enemy_1.cpp \
+    enemy_base.cpp \
     game_engine.cpp \
     hero.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    obstacle.cpp
 
 HEADERS += \
     background_scene.h \
+    bullet_base.h \
+    bullet_gun.h \
+    enemy_1.h \
+    enemy_base.h \
     game_engine.h \
     global.h \
     hero.h \
-    mainwindow.h
+    mainwindow.h \
+    obstacle.h
 
 FORMS += \
     mainwindow.ui
