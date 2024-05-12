@@ -1,8 +1,8 @@
 #include "bullet_gun.h"
 #include "global.h"
 #include <cmath>
-bullet_gun::bullet_gun(QPointF pos_, qreal angle_, qreal damage_, QGraphicsScene *scene_, QObject *parent)
-    :bullet_base(pos_, angle_, damage_, scene_, parent)
+bullet_gun::bullet_gun(QPointF pos_, qreal angle_, weapon *weapon_, QGraphicsScene *scene_, QObject *parent)
+    :bullet_base(pos_, angle_, weapon_, scene_, parent)
 {
     bullet_pixmap.load("://image/weapon/gun_bullet.png");
     //bullet_pixmap.load("://image/weapon/wp_dmr_bullet.png");

@@ -18,10 +18,13 @@ public:
     explicit hero(QObject *parent = nullptr);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    qreal gain_move_speed();
+    void up_move_speed();
 
 private:
+    qreal move_speed;
     QMovie *movie;
-    QTimer *timer;
+    QTimer *timer;//动画播放计时器
 
 signals:
 };

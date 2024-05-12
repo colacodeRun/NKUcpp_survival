@@ -20,56 +20,125 @@ QList<QPointF> enemy_generate_poses={
     QPointF(map_right-1500,map_underneath),
     QPointF(map_right-3000,map_underneath),
 };
+QList<QString> level_up_button_normal ={
+    "://image/icons/upgrades/u_hollowpoint_idle.png",
+    "://image/icons/upgrades/u_streamline_idle.png",
+    "://image/icons/upgrades/u_inthewind_idle.png",
+    "://image/icons/upgrades/u_heavybarrel_idle.png",
+    "://image/icons/upgrades/u_vitality_idle.png"
+};
+QList<QString> level_up_button_hovered ={
+    "://image/icons/upgrades/u_hollowpoint_hover.png",
+    "://image/icons/upgrades/u_streamline_hover.png",
+    "://image/icons/upgrades/u_inthewind_hover.png",
+    "://image/icons/upgrades/u_heavybarrel_hover.png",
+    "://image/icons/upgrades/u_vitality_hover.png"
+};
+QList<QString> level_up_introduce ={
+    "子弹速度提高35%",
+    "射速提高30%",
+    "人物移动速度提高10%",
+    "伤害提高50%",
+    "生命值上限提高1"
+};
+
 game_engine::game_engine(QWidget *parent)
     : QGraphicsView{parent}
 {
+
     this->setFixedSize(game_widget_width,game_widget_height);//设置窗口大小
-    setStyleSheet("background-color: rgb(34,34,34);");
-    QFont pixelFont;
-    pixelFont.setFamily("Minecraft AE");
-    QLabel *label = new QLabel("You Lose", this); // 创建一个QLabel对象，并将其添加到窗口中
-    label->setStyleSheet("color: white; font-size: 100px;");
-    label->setFont(pixelFont);
-    label ->move(200,300);
-    // //初始化视图
-    // map_scene =new background_scene(this);
-    // this->setScene(map_scene);
-    // gun = new weapon(map_scene,map_scene->hero_item->scenePos());
-    // // gun->move_gun();
-    // // this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // // this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    // this->centerOn(map_scene->hero_item);
-    // //障碍物初始化
-    // QRectF rects(0,0,150,300);
-    // for(int i=0;i<5;++i){
-    //     obstacles.push_back(new obstacle(map_scene,rects,poses[i]));
-    // }
+    //初始化视图
+    map_scene =new background_scene(this);
+    this->setScene(map_scene);
+    gun = new weapon(map_scene,map_scene->hero_item->scenePos());
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->centerOn(map_scene->hero_item);
 
-    // //攻击范围
-    // attack_extent = 300;
-    // //生命
-    // health = 4;
-    // heart_list.push_back(new heart_lable(this));
-    // for(int i= 1;i<=3;++i){
-    //     heart_list.push_back(new heart_lable(this));
-    //     heart_list[i]->move(heart_list[i-1]->pos().x()-44,44);
-    // }
-    // //敌人数目计数器
-    // enemy_num = 0;
-    // //初始化计时器
-    // timer =new QTimer(this);
-    // timer->setInterval(200);
-    // timer->start();
-    // bullet_timer =new QTimer(this);
-    // bullet_timer->start(400);
-    // enemy_timer =new QTimer(this);
-    // enemy_timer-> start(1000);
+    //设置字体
+    font.setFamily("Minecraft AE");
 
-    // connect(enemy_timer,&QTimer::timeout,this,&game_engine::enemy_generate);
-    // connect(bullet_timer,&QTimer::timeout,this,&game_engine::gun_fire);
-    // connect(timer,&QTimer::timeout,this,&game_engine::view_update);
-    // //设置聚焦
-    // this->setFocus();
+    //结束语
+    loser_end = new QLabel(this);
+    loser_end -> move(225,300);
+    loser_end -> setFont(font);
+    loser_end -> setText("You  Lose");
+    loser_end -> setStyleSheet("QLabel { color : red; font : 100pt }");
+    loser_end -> hide();
+    winer_end =new QLabel(this);
+    winer_end -> move(300,300);
+    winer_end -> setFont(font);
+    winer_end -> setText("You Win");
+    winer_end -> setStyleSheet("QLabel { color : white; font : 100pt }");
+    winer_end -> hide();
+
+    //初始化游戏时间
+    time_len = 300;
+    time_now = new QLabel(this);
+    time_now -> move(44,44);
+    time_now -> setText(QString("Time :  %1:%2").arg(time_len/60).arg(time_len%60,2,10,QChar('0')));
+    time_now -> setFont(font);
+    time_now -> setStyleSheet("QLabel {color : white ; font : 20pt}");
+    //初始化经验值
+    exp_num = 0;
+    level =1;
+    exp = new QLabel(this);
+    exp -> move(44,75);
+    exp -> setText(QString("Level %1 :  %2/%3").arg(level).arg(exp_num).arg(pow(level-1,2)+10));
+    exp -> setFont(font);
+    exp -> setStyleSheet("QLabel {color : white ; font : 20pt}");
+    //初始化升级buttons和label
+    for(int i=0;i<3;++i){
+        up_buttons.append(new QPushButton(this));
+        up_introductions.append(new QLabel(this));
+        up_buttons[i] -> move(252.5+300*i,350);
+        up_buttons[i] -> setFixedSize(up_button_width,up_button_height);
+        up_buttons[i] ->setFlat(true);
+        up_introductions[i] -> setFont(font);
+        up_introductions[i] -> setStyleSheet("QLabel { color : white; font : 15pt }");
+        up_introductions[i] -> hide();
+        up_buttons[i] -> hide();
+    }
+    //障碍物初始化
+    QRectF rects(0,0,150,300);
+    for(int i=0;i<5;++i){
+        obstacles.push_back(new obstacle(map_scene,rects,poses[i]));
+    }
+
+    //攻击范围
+    attack_extent = 400;
+    //生命初始化
+    health_total = health_now = 4;
+    heart_list.push_back(new heart_lable(this));
+    for(int i= 1;i<=3;++i){
+        for(auto &heart : heart_list){
+            heart -> move(heart->pos().x()-44,44);
+        }
+        heart_list.push_back(new heart_lable(this));
+    }
+    //敌人数目计数器
+    enemy_num = 0;
+    //初始化计时器
+    timer =new QTimer(this);
+    timer->setInterval(200);
+    timer->start();
+    bullet_timer =new QTimer(this);
+    bullet_timer->start(400);
+    enemy_timer =new QTimer(this);
+    enemy_timer-> start(1000);
+    hurt_timer = new QTimer(this);
+    hurt_timer -> start(1000);
+    main_timer = new QTimer(this);
+    main_timer -> start(1000);
+
+    connect(hurt_timer,&QTimer::timeout,this ,&game_engine::hero_gain_hurt);
+    connect(enemy_timer,&QTimer::timeout,this,&game_engine::enemy_generate);
+    connect(bullet_timer,&QTimer::timeout,this,&game_engine::gun_fire);
+    connect(timer,&QTimer::timeout,this,&game_engine::view_update);
+    connect(main_timer,&QTimer::timeout,this,&game_engine::time_change);
+    connect(this ,&game_engine :: up_selection_make,this,&game_engine::up_hide);
+    //设置聚焦
+    this->setFocus();
 
 }
 
@@ -132,24 +201,67 @@ void game_engine::hero_update()
         }
     }
     //边界检测
-    if(map_scene->hero_item->x()-hero_width/2+dx>=map_left &&
-        map_scene->hero_item->y()-hero_height/2+dy>=map_top &&
-        map_scene->hero_item->x()+hero_width/2+dx<=map_right &&
-        map_scene->hero_item->y()+hero_height/2+dy<=map_underneath)
+    qreal hero_speed = map_scene -> hero_item -> gain_move_speed();
+    qreal width = map_scene->hero_item->boundingRect().width();
+    qreal height = map_scene ->hero_item->boundingRect().height();
+    if(map_scene->hero_item->x()-width/2+dx>=map_left &&
+        map_scene->hero_item->y()-height/2+dy>=map_top &&
+        map_scene->hero_item->x()+width/2+dx<=map_right &&
+        map_scene->hero_item->y()+height/2+dy<=map_underneath)
     {
-        map_scene->hero_item->setPos(map_scene->hero_item->x()+dx,map_scene->hero_item->y()+dy);
+        map_scene->hero_item->setPos(map_scene->hero_item->x()+dx*hero_speed,map_scene->hero_item->y()+dy*hero_speed);
     }
     //人物与障碍物碰撞检测
     for(int i=0;i<5;++i){
         if(map_scene->hero_item->collidesWithItem(obstacles[i]))
         {
-            map_scene->hero_item->setPos(map_scene->hero_item->x()-dx,map_scene->hero_item->y()-dy);
+            map_scene->hero_item->setPos(map_scene->hero_item->x()-dx*hero_speed,map_scene->hero_item->y()-dy*hero_speed);
            // qDebug()<<"test";
         }
     }
     map_scene->hero_item->movie->start();
     dx=0;
     dy=0;
+}
+
+void game_engine::timer_stop()
+{
+        timer -> stop();
+        hurt_timer -> stop();
+        enemy_timer -> stop();
+        bullet_timer -> stop();
+        main_timer -> stop();
+}
+
+
+
+void game_engine::timer_start()
+{
+    timer -> start();
+    hurt_timer -> start();
+    enemy_timer -> start();
+    bullet_timer -> start();
+    main_timer -> start();
+}
+
+void game_engine::time_change()
+{
+    --time_len;
+    time_now -> setText(QString("Time :  %1:%2").arg(time_len/60).arg(time_len%60,2,10,QChar('0')));
+    if(time_len == 0){
+        win();
+    }
+
+}
+
+void game_engine::delete_item()
+{
+    delete map_scene;
+    for(auto heart:heart_list){
+        delete heart;
+    }
+    delete time_now;
+    delete exp;
 }
 
 
@@ -171,15 +283,18 @@ qreal game_engine::gain_angle(QPointF a, QPointF b)
 //开火
 void game_engine::gun_fire()
 {
-        if(enemy_num>0)
+        if(!enemy_list.empty())
         {
-        std::sort(enemy_list.begin(),enemy_list.end(),[](enemy_base *a,enemy_base *b){
-            return a->distance_hero<=b->distance_hero;
-        });
-        qreal angle = gain_angle(map_scene->hero_item->scenePos(),enemy_list[0]->scenePos());
-        if(enemy_list[0]-> distance_hero<=attack_extent){
-            bullet_gun *bullet=new bullet_gun(map_scene->hero_item->scenePos(),angle,1,map_scene);
-            gun->gain_angle(enemy_list[0]->scenePos());
+            enemy_base* target_enemy = enemy_list[0];
+        for(auto enemy:enemy_list){
+                if(enemy->distance_hero<target_enemy->distance_hero){
+                target_enemy = enemy;
+            }
+        }
+        qreal angle = gain_angle(map_scene->hero_item->scenePos(),target_enemy->scenePos());
+        if(target_enemy->distance_hero<=attack_extent){
+            bullet_gun *bullet=new bullet_gun(map_scene->hero_item->scenePos(),angle,gun,map_scene);
+            gun->gain_angle(target_enemy->scenePos());
             gun->move_gun();
         }
         }
@@ -192,9 +307,10 @@ void game_engine::enemy_death()
     while(it.hasNext()) {
         enemy_base* obs = it.next();
         if(obs->enemy_die()) {
-            obs ->deleteLater();
             it.remove();
+            obs ->deleteLater();
             --enemy_num;
+            exp_up();
         }
     }
 }
@@ -238,8 +354,8 @@ void game_engine::enemy_update()
 void game_engine::enemy_generate()
 {
     int i = QRandomGenerator::global()->bounded(8);
-    if(enemy_num<=30){
-        enemy_list.push_back(new enemy_1(enemy_generate_poses[i],15,map_scene));
+    if(enemy_num<=enemy_num_top){
+        enemy_list.push_back(new enemy_1(enemy_generate_poses[i],13,map_scene));
         ++enemy_num;
     }
 }
@@ -263,6 +379,143 @@ bool game_engine::enemy_hit_obstacle_check(enemy_base *x, obstacle *y, qreal ang
 qreal game_engine::gain_points_distance(QPointF n, QPointF m)
 {
     return sqrt(pow(n.x()-m.x(),2)+pow(n.y()-m.y(),2));
+}
+
+//升级
+void game_engine::exp_up()
+{
+    ++exp_num;
+    level_up();
+    exp -> setText(QString("Level %1 :  %2/%3").arg(level).arg(exp_num).arg(pow(level-1,2)+10));
+    exp -> adjustSize();
+}
+
+void game_engine::level_up()
+{
+    if(exp_num >= pow(level-1,2)+10){
+        ++level;
+        exp_num = 0;
+        up_select();
+    }
+}
+
+//射速提高up
+void game_engine::up_bullet_generate_speed()
+{
+    gun ->up_generate_speed();
+    bullet_timer -> setInterval(400/gun ->gain_generate_speed());
+}
+
+//增加生命值up
+void game_engine::up_health()
+{
+    ++health_now;
+    ++health_total;
+    for(auto &heart : heart_list){
+        heart -> move(heart->pos().x()-44,44);
+    }
+    heart_list.push_back(new heart_lable(this));
+    heart_list[health_total-1]->show();
+}
+
+//产生升级选项
+void game_engine::up_select()
+{
+    timer_stop();
+    QList<int> numbers;
+    while (numbers.size() < 3) {
+        int number = QRandomGenerator::global()->bounded(5);
+        if (!numbers.contains(number)) {
+            numbers.append(number);
+        }
+    }
+    for(int i=0;i<3;++i){
+        QPixmap pixmap_normal = level_up_button_normal[numbers[i]];
+        pixmap_normal.scaled(up_button_width,up_button_height,Qt::IgnoreAspectRatio);
+        up_buttons[i]->setStyleSheet(QString("QPushButton{border-image:url(%1);}"
+                                       "QPushButton:hover{border-image:url(%2);}")
+                                         .arg(level_up_button_normal[numbers[i]])
+                                         .arg(level_up_button_hovered[numbers[i]])
+                               );
+        up_buttons[i] -> show();
+        up_introductions[i] -> setText(level_up_introduce[numbers[i]]);
+        up_introductions[i] ->adjustSize();
+        up_introductions[i] ->move(up_buttons[i]->pos().x()+up_button_width/2-up_introductions[i]->width()/2,
+                                  up_buttons[i]->pos().y()+up_button_height+8);
+        up_introductions[i] ->show();
+        connect(up_buttons[i],&QPushButton::pressed,[=](){
+            up_function_select(numbers[i]);
+            emit up_selection_make();
+        });
+        }
+}
+
+void game_engine::up_function_select(int num)
+{
+    switch (num) {
+    case 0:
+        gun->up_bullet_speed();
+        break;
+    case 1:
+        up_bullet_generate_speed();
+        break;
+    case 2:
+        map_scene -> hero_item ->up_move_speed();
+        break;
+    case 3:
+        gun -> up_damage();
+        break;
+    case 4:
+        up_health();
+        break;
+    }
+}
+
+void game_engine::up_hide()
+{
+    for(int i=0;i<3;++i){
+        up_buttons[i]-> hide();
+        up_introductions[i] -> hide();
+    }
+    for(auto button:up_buttons){
+        disconnect(button);
+    }
+    timer_start();
+}
+
+//人物受伤和死亡判断
+void game_engine::hero_gain_hurt()
+{
+    if(health_now >= 0){//防止越界访问
+    for(auto enemy: enemy_list){
+        if(enemy->collidesWithItem(map_scene->hero_item)){
+            lose_heart();
+        }
+    }
+    if(health_now == 0)hero_die();
+    }
+}
+
+void game_engine::lose_heart()
+{
+    heart_list[health_total-health_now] -> lose_heart();
+    --health_now;
+}
+
+void game_engine::hero_die()
+{
+    timer_stop();
+    delete_item();
+    loser_end -> show();
+    setStyleSheet("background-color: rgb(34,34,34);");
+}
+
+void game_engine::win()
+{
+    timer_stop();
+    delete_item();
+    winer_end -> show();
+    setStyleSheet("background-color: rgb(34,34,34);");
 }
 
 //获取键盘按下和释放，实现长按移动

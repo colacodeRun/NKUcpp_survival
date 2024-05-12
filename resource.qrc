@@ -34,5 +34,47 @@
         <file>image/icons/ic_muzzle_choke.png</file>
         <file>image/icons/ic_respawn_udisk.png</file>
         <file>image/icons/Myicon.ico</file>
+        <file>image/icons/upgrades/u_barrage_hover.png</file>
+        <file>image/icons/upgrades/u_barrage_idle.png</file>
+        <file>image/icons/upgrades/u_dodge_hover.png</file>
+        <file>image/icons/upgrades/u_dodge_idle.png</file>
+        <file>image/icons/upgrades/u_doubleshot_hover.png</file>
+        <file>image/icons/upgrades/u_doubleshot_idle.png</file>
+        <file>image/icons/upgrades/u_fasthand_hover.png</file>
+        <file>image/icons/upgrades/u_fasthand_idle.png</file>
+        <file>image/icons/upgrades/u_giant_hover.png</file>
+        <file>image/icons/upgrades/u_giant_idle.png</file>
+        <file>image/icons/upgrades/u_haste_hover.png</file>
+        <file>image/icons/upgrades/u_haste_idle.png</file>
+        <file>image/icons/upgrades/u_heavybarrel_hover.png</file>
+        <file>image/icons/upgrades/u_heavybarrel_idle.png</file>
+        <file>image/icons/upgrades/u_hollowpoint_hover.png</file>
+        <file>image/icons/upgrades/u_hollowpoint_idle.png</file>
+        <file>image/icons/upgrades/u_inthewind_hover.png</file>
+        <file>image/icons/upgrades/u_inthewind_idle.png</file>
+        <file>image/icons/upgrades/u_lightbullet_hover.png</file>
+        <file>image/icons/upgrades/u_lightbullet_idle.png</file>
+        <file>image/icons/upgrades/u_overload_hover.png</file>
+        <file>image/icons/upgrades/u_overload_idle.png</file>
+        <file>image/icons/upgrades/u_overspeed_hover.png</file>
+        <file>image/icons/upgrades/u_overspeed_idle.png</file>
+        <file>image/icons/upgrades/u_pierecinground_hover.png</file>
+        <file>image/icons/upgrades/u_pierecinground_idle.png</file>
+        <file>image/icons/upgrades/u_reaper_hover.png</file>
+        <file>image/icons/upgrades/u_reaper_idle.png</file>
+        <file>image/icons/upgrades/u_regeneration_hover.png</file>
+        <file>image/icons/upgrades/u_regeneration_idle.png</file>
+        <file>image/icons/upgrades/u_runngun_hover.png</file>
+        <file>image/icons/upgrades/u_runngun_idle.png</file>
+        <file>image/icons/upgrades/u_sniper_hover.png</file>
+        <file>image/icons/upgrades/u_sniper_idle.png</file>
+        <file>image/icons/upgrades/u_streamline_hover.png</file>
+        <file>image/icons/upgrades/u_streamline_idle.png</file>
+        <file>image/icons/upgrades/u_takeaim_hover.png</file>
+        <file>image/icons/upgrades/u_takeaim_idle.png</file>
+        <file>image/icons/upgrades/u_vitality_hover.png</file>
+        <file>image/icons/upgrades/u_vitality_idle.png</file>
+        <file>image/icons/upgrades/u_void_hover.png</file>
+        <file>image/icons/upgrades/u_void_idle.png</file>
     </qresource>
 </RCC>

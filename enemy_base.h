@@ -19,10 +19,12 @@ public:
     void enemy_move(qreal angle);
     qreal move_angle(QPointF pos);
     qreal distance_hero;
+    qreal gain_exp();
 protected:
     qreal health;
     qreal damage;
     qreal speed;
+    qreal exp;
 signals:
 };
 

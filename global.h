@@ -1,8 +1,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define hero_height 90
-#define hero_width 80
+// #define hero_height 90
+// #define hero_width 80
 #define game_widget_width 1200
 #define game_widget_height 800
 #define map_width 4800
@@ -19,4 +19,7 @@
 #define enemy_1_height 14
 #define gun_width 32
 #define gun_height 32
+#define up_button_width 95
+#define up_button_height 95
+#define enemy_num_top 50
 #endif // GLOBAL_H

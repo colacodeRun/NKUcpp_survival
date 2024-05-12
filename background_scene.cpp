@@ -9,5 +9,5 @@ background_scene::background_scene(QObject *parent)
 
     hero_item = new hero(this);
     this->addItem(hero_item);
-    hero_item->setPos(map_width/2-hero_width/2,200+map_height/2-hero_height/2);
+    hero_item->setPos(map_width/2,150+map_height/2);
 }

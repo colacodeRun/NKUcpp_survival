@@ -8,6 +8,8 @@
 #include "obstacle.h"
 #include "weapon.h"
 #include "heart_lable.h"
+
+#include <QPushButton>
 #include <QWidget>
 #include<QGraphicsView>
 #include<QTimer>
@@ -25,8 +27,12 @@ public:
     void view_update();
     void hero_update();
 
+    void timer_stop();
+    void timer_start();
+    void time_change();
+    void delete_item();
+
     void map_scene_update();
-    // void bullet_generate();
     qreal gain_angle(QPointF a,QPointF b);
     void gun_fire();
 
@@ -35,7 +41,23 @@ public:
     void enemy_generate();
     bool enemy_hit_obstacle_check(enemy_base *x,obstacle *y,qreal angle);
     qreal gain_points_distance(QPointF n,QPointF m);
-    void die();
+
+    //升级
+    void exp_up();
+    void level_up();
+    void up_bullet_generate_speed();
+    void up_health();
+    void up_select();
+    void up_function_select(int num);
+    void up_hide();
+
+
+    //英雄受伤和死亡判断
+    void hero_gain_hurt();
+    void lose_heart();
+    void hero_die();
+    //胜利
+    void win();
 protected:
     void wheelEvent(QWheelEvent *event){}
     void keyPressEvent(QKeyEvent *eyent);
@@ -45,8 +67,24 @@ private:
     QTimer *timer;
     QTimer *bullet_timer;
     QTimer *enemy_timer;
+    QTimer *hurt_timer;
+    QTimer *main_timer;
+    int time_len;
 
-    int health;
+    QFont font;
+    QLabel *loser_end;
+    QLabel *winer_end;
+    QLabel *time_now;
+    QLabel *exp;
+
+    int health_now;//生命值
+    int health_total;
+
+    int exp_num;
+    int level;
+    QList<QPushButton*> up_buttons;
+    QList<QLabel*>up_introductions;
+
     QList<heart_lable *>heart_list;
     qreal attack_extent;
     QList<obstacle*> obstacles ;
@@ -64,6 +102,7 @@ private:
     qreal enemy_num;
     weapon *gun;
 signals:
+    void up_selection_make();
 
 };
 

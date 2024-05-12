@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "enemy_base.h"
+#include "weapon.h"
 
 #include <QObject>
 #include <QGraphicsItem>
@@ -13,7 +14,7 @@ class bullet_base : public QObject,public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit bullet_base(QPointF pos_,qreal angle_,qreal damage_,QGraphicsScene *scene_,QObject *parent = nullptr);
+    explicit bullet_base(QPointF pos_,qreal angle_,weapon *weapon_,QGraphicsScene *scene_,QObject *parent = nullptr);
     void hit_enemy_check();
     void bullet_move();
 
@@ -24,6 +25,7 @@ protected:
     qreal bullet_angle;
     qreal bullet_damage;
     qreal bullet_speed;
+    weapon *hero_weapon;
 signals:
 };
 

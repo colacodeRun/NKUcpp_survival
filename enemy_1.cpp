@@ -5,6 +5,7 @@ enemy_1::enemy_1(QPointF point_, qreal speed, QGraphicsScene *scene_, QObject *p
 {
     pixmap.load("://image/enemy/en_float_elite.png");
     health = 3;
+    speed =17;
 }
 QRectF enemy_1::boundingRect() const
 {
