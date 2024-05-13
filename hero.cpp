@@ -4,6 +4,7 @@
 hero::hero(QObject *parent)
     : QObject{parent}
 {
+    can_hurt =true;
     movie = new QMovie(this);
     movie->setFileName("://image/hero_stand_right.gif");
     movie->setSpeed(85);
@@ -39,5 +40,7 @@ qreal hero::gain_move_speed()
 
 void hero::up_move_speed()
 {
-    move_speed *= 1.1;
+    move_speed *= 1.25;
 }
+
+

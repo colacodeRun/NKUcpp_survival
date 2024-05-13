@@ -21,5 +21,7 @@
 #define gun_height 32
 #define up_button_width 95
 #define up_button_height 95
-#define enemy_num_top 50
+#define enemy_num_top 100
+#define enemy_bullet_width 16
+#define enemy_bullet_height 16
 #endif // GLOBAL_H

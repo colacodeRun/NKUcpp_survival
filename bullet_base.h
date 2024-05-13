@@ -17,8 +17,8 @@ public:
     explicit bullet_base(QPointF pos_,qreal angle_,weapon *weapon_,QGraphicsScene *scene_,QObject *parent = nullptr);
     void hit_enemy_check();
     void bullet_move();
-
     QTimer* bullet_timer;
+    virtual ~bullet_base();
 
 protected:
     QPointF bullet_point;

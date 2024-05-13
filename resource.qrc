@@ -76,5 +76,6 @@
         <file>image/icons/upgrades/u_vitality_idle.png</file>
         <file>image/icons/upgrades/u_void_hover.png</file>
         <file>image/icons/upgrades/u_void_idle.png</file>
+        <file>bgm/infinite night sky - DDRKirby(ISQ).wav</file>
     </qresource>
 </RCC>

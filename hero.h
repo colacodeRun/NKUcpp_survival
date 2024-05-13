@@ -15,12 +15,12 @@ class hero : public QObject,public QGraphicsItem
     friend class game_engine;
     friend class background_scene;
 public:
+    bool can_hurt;
     explicit hero(QObject *parent = nullptr);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     qreal gain_move_speed();
     void up_move_speed();
-
 private:
     qreal move_speed;
     QMovie *movie;

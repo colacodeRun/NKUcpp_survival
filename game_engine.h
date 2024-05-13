@@ -8,7 +8,9 @@
 #include "obstacle.h"
 #include "weapon.h"
 #include "heart_lable.h"
-
+#include "enemy_2.h"
+#include "enemy_3.h"
+#include "bullet_enemy_3.h"
 #include <QPushButton>
 #include <QWidget>
 #include<QGraphicsView>
@@ -17,6 +19,7 @@
 #include<QKeyEvent>
 #include<cmath>
 #include <QRandomGenerator>
+#include <QSoundEffect>
 class game_engine : public QGraphicsView
 {
     friend class background_scene;
@@ -24,9 +27,10 @@ class game_engine : public QGraphicsView
     Q_OBJECT
 public:
     explicit game_engine(QWidget *parent = nullptr);
+    //人物和敌人动画更新
     void view_update();
     void hero_update();
-
+    //计时器停止，开始以及清理内存
     void timer_stop();
     void timer_start();
     void time_change();
@@ -34,12 +38,16 @@ public:
 
     void map_scene_update();
     qreal gain_angle(QPointF a,QPointF b);
+    //开火
     void gun_fire();
 
+    //敌人生成，敌人自动寻路，敌人死亡，敌人子弹生成
     void enemy_death();
     void enemy_update();
     void enemy_generate();
+    void enemy_bullet_generate();
     bool enemy_hit_obstacle_check(enemy_base *x,obstacle *y,qreal angle);
+
     qreal gain_points_distance(QPointF n,QPointF m);
 
     //升级
@@ -64,13 +72,18 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 private:
     int cnt=0;
+    //音乐
+    QSoundEffect *soundEffect;
+    //计时器
     QTimer *timer;
     QTimer *bullet_timer;
     QTimer *enemy_timer;
     QTimer *hurt_timer;
+    QTimer *bullet_enemy_generate_timer;
     QTimer *main_timer;
     int time_len;
 
+    //字体和各种文字
     QFont font;
     QLabel *loser_end;
     QLabel *winer_end;
@@ -82,15 +95,17 @@ private:
 
     int exp_num;
     int level;
+    //存储生命值按钮和文字
     QList<QPushButton*> up_buttons;
     QList<QLabel*>up_introductions;
 
-    QList<heart_lable *>heart_list;
-    qreal attack_extent;
+    QList<heart_lable *>heart_list;//存储生命贴图
+    qreal attack_extent;//攻击范围
     QList<obstacle*> obstacles ;
     background_scene *map_scene;
-    int lastkey=Qt::Key_D;
-    double dx=0,dy=0;
+    int lastkey=Qt::Key_D;//用于加载贴图
+    double dx=0,dy=0;//用于移动hero
+    //用于移动
     QMap<int,bool> keymap=
     {
         {Qt::Key_W,false},
@@ -98,6 +113,7 @@ private:
         {Qt::Key_S,false},
         {Qt::Key_D,false}
     };
+    //存储敌人的链表
     QList<enemy_base*>enemy_list;
     qreal enemy_num;
     weapon *gun;

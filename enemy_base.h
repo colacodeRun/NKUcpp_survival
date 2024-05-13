@@ -3,7 +3,6 @@
 
 #include "global.h"
 #include "hero.h"
-//#include "obstacle.h"
 #include <QObject>
 #include <QGraphicsItem>
 #include <QGraphicsScene>

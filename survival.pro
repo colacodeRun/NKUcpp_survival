@@ -1,5 +1,5 @@
 QT       += core gui
-
+ QT      += multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -11,33 +11,36 @@ CONFIG += c++17
 SOURCES += \
     background_scene.cpp \
     bullet_base.cpp \
+    bullet_enemy_3.cpp \
     bullet_gun.cpp \
     enemy_1.cpp \
+    enemy_2.cpp \
+    enemy_3.cpp \
     enemy_base.cpp \
     game_engine.cpp \
     heart_lable.cpp \
     hero.cpp \
     main.cpp \
-    mainwindow.cpp \
     obstacle.cpp \
     weapon.cpp
 
 HEADERS += \
     background_scene.h \
     bullet_base.h \
+    bullet_enemy_3.h \
     bullet_gun.h \
     enemy_1.h \
+    enemy_2.h \
+    enemy_3.h \
     enemy_base.h \
     game_engine.h \
     global.h \
     heart_lable.h \
     hero.h \
-    mainwindow.h \
     obstacle.h \
     weapon.h
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

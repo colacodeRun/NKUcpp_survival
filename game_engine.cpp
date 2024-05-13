@@ -37,7 +37,7 @@ QList<QString> level_up_button_hovered ={
 QList<QString> level_up_introduce ={
     "子弹速度提高35%",
     "射速提高30%",
-    "人物移动速度提高10%",
+    "人物移动速度提高25%",
     "伤害提高50%",
     "生命值上限提高1"
 };
@@ -46,7 +46,18 @@ game_engine::game_engine(QWidget *parent)
     : QGraphicsView{parent}
 {
 
-    this->setFixedSize(game_widget_width,game_widget_height);//设置窗口大小
+    //音乐配置
+    soundEffect = new QSoundEffect;
+    soundEffect->setSource(QUrl::fromLocalFile("://bgm/infinite night sky - DDRKirby(ISQ).wav"));
+    soundEffect->setLoopCount(QSoundEffect::Infinite);
+    soundEffect->setVolume(0.35f);
+    soundEffect->play();
+
+    //this->setFixedSize(game_widget_width,game_widget_height);
+    //窗口配置
+    resize(game_widget_width,game_widget_height);
+    setWindowIcon(QIcon("://image/icons/Myicon.ico"));
+    setWindowTitle("Survival");
     //初始化视图
     map_scene =new background_scene(this);
     this->setScene(map_scene);
@@ -106,7 +117,7 @@ game_engine::game_engine(QWidget *parent)
     }
 
     //攻击范围
-    attack_extent = 400;
+    attack_extent = 450;
     //生命初始化
     health_total = health_now = 4;
     heart_list.push_back(new heart_lable(this));
@@ -130,12 +141,16 @@ game_engine::game_engine(QWidget *parent)
     hurt_timer -> start(1000);
     main_timer = new QTimer(this);
     main_timer -> start(1000);
+    bullet_enemy_generate_timer = new QTimer(this);
+    bullet_enemy_generate_timer->start(4000);
 
     connect(hurt_timer,&QTimer::timeout,this ,&game_engine::hero_gain_hurt);
     connect(enemy_timer,&QTimer::timeout,this,&game_engine::enemy_generate);
     connect(bullet_timer,&QTimer::timeout,this,&game_engine::gun_fire);
     connect(timer,&QTimer::timeout,this,&game_engine::view_update);
     connect(main_timer,&QTimer::timeout,this,&game_engine::time_change);
+    connect(bullet_enemy_generate_timer,&QTimer::timeout,this,&game_engine::enemy_bullet_generate);
+
     connect(this ,&game_engine :: up_selection_make,this,&game_engine::up_hide);
     //设置聚焦
     this->setFocus();
@@ -231,6 +246,8 @@ void game_engine::timer_stop()
         enemy_timer -> stop();
         bullet_timer -> stop();
         main_timer -> stop();
+        bullet_enemy_generate_timer ->stop();
+        map_scene->hero_item->can_hurt=false;
 }
 
 
@@ -242,8 +259,10 @@ void game_engine::timer_start()
     enemy_timer -> start();
     bullet_timer -> start();
     main_timer -> start();
+    bullet_enemy_generate_timer ->start();
+    map_scene->hero_item->can_hurt=true;
 }
-
+//游戏时间字面更改
 void game_engine::time_change()
 {
     --time_len;
@@ -353,12 +372,50 @@ void game_engine::enemy_update()
 //敌人生成器
 void game_engine::enemy_generate()
 {
-    int i = QRandomGenerator::global()->bounded(8);
+    int i = QRandomGenerator::global()->bounded(8);//随机出生点
+    int x = QRandomGenerator::global()->bounded(3);//随机出生敌人
     if(enemy_num<=enemy_num_top){
-        enemy_list.push_back(new enemy_1(enemy_generate_poses[i],13,map_scene));
+        switch (x) {
+        case 0:
+            enemy_list.push_back(new enemy_1(enemy_generate_poses[i],18,map_scene));
+            break;
+        case 1:
+            enemy_list.push_back(new enemy_2(enemy_generate_poses[i],20,map_scene));
+            break;
+        case 2:
+            enemy_list.push_back(new enemy_3(enemy_generate_poses[i],16,map_scene));
+            break;
+        default:
+            break;
+        }
+        qreal dx = map_scene->hero_item->x()-enemy_list.last()->x(),
+            dy =map_scene->hero_item->y()-enemy_list.last()->y();
+        enemy_list.last()->distance_hero =sqrt(pow(dx,2)+pow(dy,2));
         ++enemy_num;
     }
 }
+
+//生成敌人子弹
+void game_engine::enemy_bullet_generate()
+{
+    if(!enemy_list.empty()){
+        for(enemy_base* enemy : enemy_list) {
+            enemy_3* enemy3 = dynamic_cast<enemy_3*>(enemy);
+            if(enemy3 != nullptr){//只有enemy_3能发射子弹
+                bullet_enemy_3*new_bullet =new bullet_enemy_3(enemy3->scenePos(),map_scene->hero_item,map_scene);
+                connect(new_bullet,&bullet_enemy_3::hurt_hero,[=](){
+                    if(health_now > 0){//防止越界访问
+                        lose_heart();
+                    }
+                    if(health_now == 0)hero_die();
+                });
+            }
+        }
+    }
+}
+
+
+
 
 //回溯法判断敌人碰撞障碍物
 bool game_engine::enemy_hit_obstacle_check(enemy_base *x, obstacle *y, qreal angle)
@@ -389,7 +446,7 @@ void game_engine::exp_up()
     exp -> setText(QString("Level %1 :  %2/%3").arg(level).arg(exp_num).arg(pow(level-1,2)+10));
     exp -> adjustSize();
 }
-
+//字面升级
 void game_engine::level_up()
 {
     if(exp_num >= pow(level-1,2)+10){
@@ -432,7 +489,7 @@ void game_engine::up_select()
     for(int i=0;i<3;++i){
         QPixmap pixmap_normal = level_up_button_normal[numbers[i]];
         pixmap_normal.scaled(up_button_width,up_button_height,Qt::IgnoreAspectRatio);
-        up_buttons[i]->setStyleSheet(QString("QPushButton{border-image:url(%1);}"
+        up_buttons[i]->setStyleSheet(QString("QPushButton{border-image:url(%1);}"//用样式表设置按钮形式，实现鼠标悬浮效果
                                        "QPushButton:hover{border-image:url(%2);}")
                                          .arg(level_up_button_normal[numbers[i]])
                                          .arg(level_up_button_hovered[numbers[i]])
@@ -450,6 +507,7 @@ void game_engine::up_select()
         }
 }
 
+//升级选择处理
 void game_engine::up_function_select(int num)
 {
     switch (num) {
@@ -468,9 +526,11 @@ void game_engine::up_function_select(int num)
     case 4:
         up_health();
         break;
+    default:
+        break;
     }
 }
-
+//升级结束处理
 void game_engine::up_hide()
 {
     for(int i=0;i<3;++i){
@@ -478,7 +538,7 @@ void game_engine::up_hide()
         up_introductions[i] -> hide();
     }
     for(auto button:up_buttons){
-        disconnect(button);
+        button->disconnect();
     }
     timer_start();
 }
@@ -486,34 +546,34 @@ void game_engine::up_hide()
 //人物受伤和死亡判断
 void game_engine::hero_gain_hurt()
 {
-    if(health_now >= 0){//防止越界访问
+    if(health_now > 0){//防止越界访问
     for(auto enemy: enemy_list){
         if(enemy->collidesWithItem(map_scene->hero_item)){
             lose_heart();
         }
     }
-    if(health_now == 0)hero_die();
+    if(health_now <= 0)hero_die();
     }
 }
-
+//生命图标改变
 void game_engine::lose_heart()
 {
     heart_list[health_total-health_now] -> lose_heart();
     --health_now;
 }
-
+//出现失败画面
 void game_engine::hero_die()
 {
     timer_stop();
-    delete_item();
+    // delete_item();
     loser_end -> show();
     setStyleSheet("background-color: rgb(34,34,34);");
 }
-
+//出现胜利画面
 void game_engine::win()
 {
     timer_stop();
-    delete_item();
+    // delete_item();
     winer_end -> show();
     setStyleSheet("background-color: rgb(34,34,34);");
 }

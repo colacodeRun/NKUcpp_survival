@@ -43,4 +43,3 @@ qreal enemy_base::gain_exp()
     return exp;
 }
 
-

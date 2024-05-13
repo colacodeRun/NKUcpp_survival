@@ -8,14 +8,14 @@ bullet_base::bullet_base(QPointF pos_, qreal angle_, weapon *weapon_, QGraphicsS
     scene_->addItem(this);
     setPos(bullet_point.x(),bullet_point.y());
     qreal angle_degrees = qRadiansToDegrees(angle_);
-    setRotation(-angle_degrees);
+    setRotation(angle_degrees);
     setScale(4);
     bullet_timer =new QTimer(this);
     bullet_timer->start(18/bullet_speed);
     connect(bullet_timer,&QTimer::timeout,this,&bullet_base::bullet_move);
     connect(bullet_timer,&QTimer::timeout,this,&bullet_base::hit_enemy_check);
 }
-
+//子弹碰撞和边界检查
 void bullet_base::hit_enemy_check()
 {
     QList<QGraphicsItem*> colliding_items = collidingItems();
@@ -30,7 +30,7 @@ void bullet_base::hit_enemy_check()
     if (x() < 0 || x() > 4800 || y() < 0 || y() > 2700)
         deleteLater();
 }
-
+//子弹移动函数
 void bullet_base::bullet_move()
 {
     qreal angle =M_PI/2-bullet_angle;
@@ -40,3 +40,9 @@ void bullet_base::bullet_move()
     qreal dy=distance*qCos(angle);
     setPos(x()+dx,y()+dy);
 }
+
+bullet_base::~bullet_base()
+{
+    delete bullet_timer;
+}
+
