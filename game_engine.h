@@ -38,6 +38,7 @@ public:
 
     void map_scene_update();
     qreal gain_angle(QPointF a,QPointF b);
+
     //开火
     void gun_fire();
 
@@ -103,6 +104,7 @@ private:
     qreal attack_extent;//攻击范围
     QList<obstacle*> obstacles ;
     background_scene *map_scene;
+
     int lastkey=Qt::Key_D;//用于加载贴图
     double dx=0,dy=0;//用于移动hero
     //用于移动
@@ -113,6 +115,7 @@ private:
         {Qt::Key_S,false},
         {Qt::Key_D,false}
     };
+
     //存储敌人的链表
     QList<enemy_base*>enemy_list;
     qreal enemy_num;
