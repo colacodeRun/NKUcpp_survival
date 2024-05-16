@@ -7,7 +7,7 @@ hero::hero(QObject *parent)
     can_hurt =true;
     movie = new QMovie(this);
     movie->setFileName("://image/hero_stand_right.gif");
-    movie->setSpeed(85);
+    movie->setSpeed(45);
     movie->start();
     setScale(3.5);
     //gif帧变化信号连接图元更新槽函数

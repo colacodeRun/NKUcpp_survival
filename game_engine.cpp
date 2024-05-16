@@ -131,7 +131,7 @@ game_engine::game_engine(QWidget *parent)
     enemy_num = 0;
     //初始化计时器
     timer =new QTimer(this);
-    timer->setInterval(200);
+    timer->setInterval(40);
     timer->start();
     bullet_timer =new QTimer(this);
     bullet_timer->start(400);
@@ -161,6 +161,7 @@ game_engine::game_engine(QWidget *parent)
 void game_engine::view_update()
 {
     hero_update();
+    hero_run_stand();
     map_scene_update();
     gun->setPos(map_scene->hero_item->scenePos());
     enemy_death();
@@ -170,48 +171,23 @@ void game_engine::view_update()
 //更新hero位置与贴图
 void game_engine::hero_update()
 {
-    map_scene->hero_item->movie->stop();
-    bool flag=false;
     for (QMap<int, bool>::iterator it = keymap.begin(); it != keymap.end(); ++it)
     {
         if(it.value())
         {
-            flag=true;
             if(it.key()==Qt::Key_W || it.key()==Qt::Key_S)
             {
-                if(lastkey==Qt::Key_D)
-                {
-                    map_scene->hero_item->movie->setFileName("://image/hero_run_right.gif");
-                }
-                if(lastkey==Qt::Key_A)
-                {
-                    map_scene->hero_item->movie->setFileName("://image/hero_run_left.gif");
-                }
                 if(it.key()==Qt::Key_W)dy-=mobile_step;
                 if(it.key()==Qt::Key_S)dy+=mobile_step;
             }
             if(it.key()==Qt::Key_D)
             {
-                map_scene->hero_item->movie->setFileName("://image/hero_run_right.gif");
                 dx+=mobile_step;
+                lastkey =Qt::Key_D;
             }
             if(it.key()==Qt::Key_A){
-                map_scene->hero_item->movie->setFileName("://image/hero_run_left.gif");
                 dx-=mobile_step;
-            }
-        }
-    }
-    if(!flag)
-    {
-        for (QMap<int, bool>::iterator it = keymap.begin(); it != keymap.end(); ++it)
-        {
-            if(!it.value()){
-                if(lastkey==Qt::Key_D){
-                    map_scene->hero_item->movie->setFileName("://image/hero_stand_right.gif");
-                }
-                else if(lastkey==Qt::Key_A){
-                    map_scene->hero_item->movie->setFileName("://image/hero_stand_left.gif");
-                }
+                lastkey = Qt::Key_A;
             }
         }
     }
@@ -234,9 +210,31 @@ void game_engine::hero_update()
            // qDebug()<<"test";
         }
     }
-    map_scene->hero_item->movie->start();
     dx=0;
     dy=0;
+}
+
+void game_engine::hero_run_stand()
+{
+    if(keymap == check_key_map)return;
+    if((keymap[Qt::Key_A]^keymap[Qt::Key_D])&&keymap[Qt::Key_A]==check_key_map[Qt::Key_A]&&keymap[Qt::Key_D]==keymap[Qt::Key_D]);
+    check_key_map =keymap;
+    map_scene -> hero_item ->movie->stop();
+    if(keymap[Qt::Key_A]^keymap[Qt::Key_D]){
+        if(keymap[Qt::Key_A])map_scene->hero_item->movie->setFileName("://image/hero_run_left.gif");
+        if(keymap[Qt::Key_D]) map_scene->hero_item->movie->setFileName("://image/hero_run_right.gif");
+    }
+    else{
+        if(keymap[Qt::Key_W]^keymap[Qt::Key_S]){
+            if(lastkey == Qt::Key_A)map_scene->hero_item->movie->setFileName("://image/hero_run_left.gif");
+            if(lastkey == Qt::Key_D)map_scene->hero_item->movie->setFileName("://image/hero_run_right.gif");
+        }
+        else{
+            if(lastkey == Qt::Key_A)map_scene->hero_item->movie->setFileName("://image/hero_stand_left.gif");
+            if(lastkey == Qt::Key_D)map_scene->hero_item->movie->setFileName("://image/hero_stand_right.gif");
+        }
+    }
+    map_scene->hero_item->movie->start();
 }
 
 void game_engine::timer_stop()
@@ -377,13 +375,13 @@ void game_engine::enemy_generate()
     if(enemy_num<=enemy_num_top){
         switch (x) {
         case 0:
-            enemy_list.push_back(new enemy_1(enemy_generate_poses[i],18,map_scene));
+            enemy_list.push_back(new enemy_1(enemy_generate_poses[i],4.5,map_scene));
             break;
         case 1:
-            enemy_list.push_back(new enemy_2(enemy_generate_poses[i],20,map_scene));
+            enemy_list.push_back(new enemy_2(enemy_generate_poses[i],5,map_scene));
             break;
         case 2:
-            enemy_list.push_back(new enemy_3(enemy_generate_poses[i],16,map_scene));
+            enemy_list.push_back(new enemy_3(enemy_generate_poses[i],4,map_scene));
             break;
         default:
             break;
@@ -565,7 +563,7 @@ void game_engine::lose_heart()
 void game_engine::hero_die()
 {
     timer_stop();
-    // delete_item();
+    //delete_item();
     loser_end -> show();
     setStyleSheet("background-color: rgb(34,34,34);");
 }
@@ -573,7 +571,7 @@ void game_engine::hero_die()
 void game_engine::win()
 {
     timer_stop();
-    // delete_item();
+    //delete_item();
     winer_end -> show();
     setStyleSheet("background-color: rgb(34,34,34);");
 }

@@ -7,7 +7,7 @@
 #define game_widget_height 800
 #define map_width 4800
 #define map_height 2700
-#define mobile_step 20
+#define mobile_step 5.5
 #define map_top 638
 #define map_underneath 2070
 #define map_left 648

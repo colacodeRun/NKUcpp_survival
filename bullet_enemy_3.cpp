@@ -10,10 +10,10 @@ bullet_enemy_3::bullet_enemy_3(QPointF pos_, hero *hero_, QGraphicsScene *scene_
     qreal dx = my_hero ->scenePos().x() - bullet_pos.x(),
         dy = my_hero -> scenePos().y() - bullet_pos.y();
     angle = M_PI/2 - qAtan2(dy,dx);
-    setScale(2.5);
-    speed = 5;
+    setScale(2);
+    speed = 5.2;
     timer = new QTimer(this);
-    timer -> start(33);
+    timer -> start(40);
     connect(timer,&QTimer::timeout,this,&bullet_enemy_3::bullet_hit_check);
     connect(timer,&QTimer::timeout,this,&bullet_enemy_3::bullet_move);
 }

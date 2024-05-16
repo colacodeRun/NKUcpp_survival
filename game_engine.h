@@ -30,6 +30,7 @@ public:
     //人物和敌人动画更新
     void view_update();
     void hero_update();
+    void hero_run_stand();
     //计时器停止，开始以及清理内存
     void timer_stop();
     void timer_start();
@@ -38,6 +39,7 @@ public:
 
     void map_scene_update();
     qreal gain_angle(QPointF a,QPointF b);
+
     //开火
     void gun_fire();
 
@@ -103,6 +105,7 @@ private:
     qreal attack_extent;//攻击范围
     QList<obstacle*> obstacles ;
     background_scene *map_scene;
+
     int lastkey=Qt::Key_D;//用于加载贴图
     double dx=0,dy=0;//用于移动hero
     //用于移动
@@ -113,6 +116,13 @@ private:
         {Qt::Key_S,false},
         {Qt::Key_D,false}
     };
+    QMap<int,bool>check_key_map=
+        {
+            {Qt::Key_W,false},
+            {Qt::Key_A,false},
+            {Qt::Key_S,false},
+            {Qt::Key_D,false}
+        };
     //存储敌人的链表
     QList<enemy_base*>enemy_list;
     qreal enemy_num;
