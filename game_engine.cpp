@@ -217,7 +217,7 @@ void game_engine::hero_update()
 void game_engine::hero_run_stand()
 {
     if(keymap == check_key_map)return;
-    if((keymap[Qt::Key_A]^keymap[Qt::Key_D])&&keymap[Qt::Key_A]==check_key_map[Qt::Key_A]&&keymap[Qt::Key_D]==keymap[Qt::Key_D]);
+    if((keymap[Qt::Key_A]^keymap[Qt::Key_D])&&keymap[Qt::Key_A]==check_key_map[Qt::Key_A]&&keymap[Qt::Key_D]==check_key_map[Qt::Key_D])return;
     check_key_map =keymap;
     map_scene -> hero_item ->movie->stop();
     if(keymap[Qt::Key_A]^keymap[Qt::Key_D]){
