@@ -116,7 +116,6 @@ private:
         {Qt::Key_S,false},
         {Qt::Key_D,false}
     };
-<<<<<<< HEAD
     QMap<int,bool>check_key_map=
         {
             {Qt::Key_W,false},
@@ -124,9 +123,6 @@ private:
             {Qt::Key_S,false},
             {Qt::Key_D,false}
         };
-=======
-
->>>>>>> 8e9afc1ed8e787583f1fcdd594eba75c256b7e81
     //存储敌人的链表
     QList<enemy_base*>enemy_list;
     qreal enemy_num;
